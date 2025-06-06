@@ -23,10 +23,19 @@ import socket
 from threading import Thread
 import win32com.client, win32api, win32con
 
+
+def find_game_file():
+    """Return the first game file found in the game folder."""
+    for entry in os.listdir('game'):
+        ext = os.path.splitext(entry)[1].lower()
+        if ext not in ('.sav', '.txt'):
+            return entry
+    return None
+
 settings = []
 commands = []
 readbuffer = ""
-GAME = os.listdir('game')[0]
+GAME = find_game_file()
 shell = win32com.client.Dispatch("WScript.Shell")
 
 VK_CODE = {'backspace':0x08,
@@ -201,7 +210,7 @@ def addtofile():
             list_commands.extend([out.lower()])
 
 def startemulator():
-    if os.path.splitext(os.listdir('game')[0])[1] != ".sav":
+    if GAME:
         os.system('"%s\game\%s"' % (os.getcwd(), GAME))
             
 def democracy():
